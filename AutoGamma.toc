@@ -1,0 +1,20 @@
+## Interface: 120000
+## Title: AutoGamma
+## Notes: Map-by-map gamma override
+## Author: LightskyGG
+## Version: 1.0.0
+## SavedVariables: AutoGammaDB
+## IconTexture: 7127723
+## AddonCompartmentFunc: AutoGamma_OnAddonCompartmentClick
+
+Core/AutoGamma.lua
+Core/Logger.lua
+Core/Database.lua
+Core/Settings.lua
+Core/AutoPrompt.lua
+Core/Gamma.lua
+Core/Events.lua
+
+UI/AutoGammaFrame.xml
+UI/AutoGammaFrame.lua
+UI/MapPreview.lua

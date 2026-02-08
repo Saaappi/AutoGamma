@@ -1,0 +1,91 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+  <Frame name="AutoGammaFrame" inherits="PortraitFrameTemplate" parent="UIParent" enableMouse="true" movable="true" clampedToScreen="true" hidden="true">
+    <Size x="420" y="520"/>
+    <Anchors>
+      <Anchor point="CENTER"/>
+    </Anchors>
+
+    <Layers>
+      <Layer level="ARTWORK">
+        <FontString parentKey="Header" inherits="GameFontNormalLarge" text="AutoGamma">
+          <Anchors>
+            <Anchor point="TOP" x="0" y="-34"/>
+          </Anchors>
+        </FontString>
+
+        <FontString parentKey="Description" inherits="GameFontHighlightSmall" justifyH="CENTER" text="Set a gamma value for the current map. When you enter this map again, AutoGamma will apply it automatically and restore your normal gamma when you leave.">
+          <Size x="360" y="40"/>
+          <Anchors>
+            <Anchor point="TOP" relativeKey="$parent.Header" relativePoint="BOTTOM" x="0" y="-8"/>
+          </Anchors>
+        </FontString>
+
+        <FontString parentKey="MapLabel" inherits="GameFontNormal" text="Current Map:">
+          <Anchors>
+            <Anchor point="TOPLEFT" x="22" y="-110"/>
+          </Anchors>
+        </FontString>
+
+        <FontString parentKey="MapValue" inherits="GameFontHighlight" text="-">
+          <Anchors>
+            <Anchor point="LEFT" relativeKey="$parent.MapLabel" relativePoint="RIGHT" x="6" y="0"/>
+          </Anchors>
+        </FontString>
+      </Layer>
+    </Layers>
+
+    <Frames>
+      <Frame parentKey="DragRegion" enableMouse="true">
+        <Size x="340" y="34"/>
+        <Anchors>
+          <Anchor point="TOP" x="0" y="-18"/>
+        </Anchors>
+      </Frame>
+
+      <Slider name="$parentGammaSlider" parentKey="GammaSlider" inherits="UISliderTemplateWithLabels" orientation="HORIZONTAL" obeyStepOnDrag="true">
+        <Size x="340" y="20"/>
+        <Anchors>
+          <Anchor point="TOP" x="0" y="-150"/>
+        </Anchors>
+
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString parentKey="GammaPercent" inherits="GameFontHighlightSmall" justifyH="CENTER" text="0%">
+              <Anchors>
+                <Anchor point="TOP" relativeKey="$parent" relativePoint="BOTTOM" x="0" y="-6"/>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Slider>
+
+      <Button name="$parentResetButton" parentKey="ResetButton" enableMouse="true">
+        <Size x="20" y="20"/>
+        <Anchors>
+          <Anchor point="LEFT" relativeKey="$parent.GammaSlider" relativePoint="RIGHT" x="10" y="0"/>
+        </Anchors>
+
+        <NormalTexture atlas="128-RedButton-Exit"/>
+        <PushedTexture atlas="128-RedButton-Exit-Pressed"/>
+        <DisabledTexture atlas="128-RedButton-Exit-Disabled"/>
+      </Button>
+
+      <Frame name="$parentPreview" parentKey="Preview" inherits="BackdropTemplate">
+        <Size x="360" y="300"/>
+        <Anchors>
+          <Anchor point="TOP" relativeKey="$parent.GammaSlider" relativePoint="BOTTOM" x="0" y="-42"/>
+        </Anchors>
+
+        <Layers>
+          <Layer level="OVERLAY">
+            <FontString parentKey="PreviewLabel" inherits="GameFontNormal" text="Gamma Test">
+              <Anchors>
+                <Anchor point="TOP" x="0" y="-8"/>
+              </Anchors>
+            </FontString>
+          </Layer>
+        </Layers>
+      </Frame>
+    </Frames>
+  </Frame>
+</Ui>
