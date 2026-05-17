@@ -31,7 +31,7 @@ local function GetPlayerMapID()
 end
 
 function Events:ResetMapRetry()
-  self.retryToken = (self.retryToken or 0) + 1
+  self.retryToken = self.retryToken + 1
   self.retryScheduled = false
   self.retryCount = 0
 end
@@ -45,7 +45,7 @@ function Events:ScheduleMapRetry()
     return
   end
 
-  if (self.retryCount or 0) >= MAX_MAP_RETRY_ATTEMPTS then
+  if self.retryCount >= MAX_MAP_RETRY_ATTEMPTS then
     return
   end
 
@@ -58,7 +58,7 @@ function Events:ScheduleMapRetry()
     end
 
     self.retryScheduled = false
-    self.retryCount = (self.retryCount or 0) + 1
+    self.retryCount = self.retryCount + 1
     self:OnMapPossiblyChanged(GetPlayerMapID())
   end)
 end
