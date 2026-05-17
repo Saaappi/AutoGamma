@@ -1,8 +1,8 @@
-## Interface: 120000
+## Interface: 120005
 ## Title: AutoGamma
 ## Notes: Map-by-map gamma override
 ## Author: LightskyGG
-## Version: 1.0.0
+## Version: 1.0.1
 ## SavedVariables: AutoGammaDB
 ## IconTexture: 7127723
 ## AddonCompartmentFunc: AutoGamma_OnAddonCompartmentClick
