@@ -46,6 +46,7 @@ function Events:ScheduleMapRetry()
   end
 
   if self.retryCount >= MAX_MAP_RETRY_ATTEMPTS then
+    Logger:Debug("Map lookup remained unavailable after %d retry attempts.", self.retryCount)
     return
   end
 
