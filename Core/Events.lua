@@ -159,6 +159,11 @@ function Events:OnEvent(event, ...)
 
     return
   end
+
+  if event == "PLAYER_LEAVING_WORLD" then
+    Gamma:RestoreBaselineIfNeeded()
+    return
+  end
 end
 
 ---@return Frame
@@ -177,6 +182,7 @@ function Events:Init()
   f:RegisterEvent("ADDON_LOADED")
   f:RegisterEvent("LOADING_SCREEN_DISABLED")
   f:RegisterEvent("PLAYER_ENTERING_WORLD")
+  f:RegisterEvent("PLAYER_LEAVING_WORLD")
   f:RegisterEvent("ZONE_CHANGED")
   f:RegisterEvent("ZONE_CHANGED_INDOORS")
   f:RegisterEvent("ZONE_CHANGED_NEW_AREA")
