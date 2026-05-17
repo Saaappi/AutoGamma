@@ -145,6 +145,14 @@ function Events:OnEvent(event, ...)
     return
   end
 
+  -- A loading screen is starting (zone/instance transition).
+  -- Restore baseline eagerly so gamma is correct before the new area loads.
+  -- This is a no-op if no override is currently active.
+  if event == "LOADING_SCREEN_ENABLED" then
+    Gamma:RestoreBaselineIfNeeded()
+    return
+  end
+
   if event == "PLAYER_ENTERING_WORLD"
     or event == "ZONE_CHANGED"
     or event == "ZONE_CHANGED_INDOORS"
@@ -157,11 +165,6 @@ function Events:OnEvent(event, ...)
       AutoPrompt:MaybePrompt()
     end
 
-    return
-  end
-
-  if event == "PLAYER_LEAVING_WORLD" then
-    Gamma:RestoreBaselineIfNeeded()
     return
   end
 end
@@ -180,9 +183,9 @@ function Events:Init()
   end)
 
   f:RegisterEvent("ADDON_LOADED")
+  f:RegisterEvent("LOADING_SCREEN_ENABLED")
   f:RegisterEvent("LOADING_SCREEN_DISABLED")
   f:RegisterEvent("PLAYER_ENTERING_WORLD")
-  f:RegisterEvent("PLAYER_LEAVING_WORLD")
   f:RegisterEvent("ZONE_CHANGED")
   f:RegisterEvent("ZONE_CHANGED_INDOORS")
   f:RegisterEvent("ZONE_CHANGED_NEW_AREA")
