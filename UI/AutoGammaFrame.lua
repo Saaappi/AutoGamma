@@ -272,13 +272,16 @@ function UI:Init()
       return
     end
 
-    -- Apply immediately so the preview reflects the change.
-    Gamma:Set(value)
-
-    -- Persist to current map.
+    -- Persist to current map first, then apply through Gamma:ApplyForMap so
+    -- that the baseline is captured and activeMapID is set correctly. This
+    -- ensures RestoreBaselineIfNeeded works when the player leaves the area.
+    -- Fall back to a direct Set when there is no valid mapID (e.g. open world).
     local mapID = GetPlayerMapID()
     if type(mapID) == "number" then
       Database:SetMapGamma(mapID, value)
+      Gamma:ApplyForMap(mapID)
+    else
+      Gamma:Set(value)
     end
 
     if frame.ResetButton then
