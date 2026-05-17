@@ -13,8 +13,14 @@ local strlower = string.lower
 local Events = {}
 
 Events.lastMapID = nil ---@type number|nil
+Events.retryScheduled = false
+Events.retryCount = 0
+Events.retryToken = 0
 
 Addon.modules.Events = Events
+
+local MAP_RETRY_DELAY_SECONDS = 0.25
+local MAX_MAP_RETRY_ATTEMPTS = 8
 
 ---@return number|nil
 local function GetPlayerMapID()
@@ -24,13 +30,47 @@ local function GetPlayerMapID()
   return C_Map.GetBestMapForUnit("player")
 end
 
+function Events:ResetMapRetry()
+  self.retryToken = (self.retryToken or 0) + 1
+  self.retryScheduled = false
+  self.retryCount = 0
+end
+
+function Events:ScheduleMapRetry()
+  if self.retryScheduled then
+    return
+  end
+
+  if not C_Timer or not C_Timer.After then
+    return
+  end
+
+  if (self.retryCount or 0) >= MAX_MAP_RETRY_ATTEMPTS then
+    return
+  end
+
+  local token = self.retryToken
+  self.retryScheduled = true
+
+  C_Timer.After(MAP_RETRY_DELAY_SECONDS, function()
+    if self.retryToken ~= token then
+      return
+    end
+
+    self.retryScheduled = false
+    self.retryCount = (self.retryCount or 0) + 1
+    self:OnMapPossiblyChanged(GetPlayerMapID())
+  end)
+end
+
 ---@param mapID number|nil
 function Events:OnMapPossiblyChanged(mapID)
   local prevMapID = self.lastMapID
-  self.lastMapID = mapID
 
   local inInstance, instanceType = IsInInstance()
   if not inInstance or instanceType == "none" then
+    self:ResetMapRetry()
+    self.lastMapID = mapID
     Gamma:RestoreBaselineIfNeeded()
 
     if Addon.modules.UI and Addon.modules.UI.Refresh then
@@ -40,9 +80,12 @@ function Events:OnMapPossiblyChanged(mapID)
   end
 
   if type(mapID) ~= "number" then
-    --Gamma:RestoreBaselineIfNeeded()
+    self:ScheduleMapRetry()
     return
   end
+
+  self:ResetMapRetry()
+  self.lastMapID = mapID
 
   local applied, appliedValue = Gamma:ApplyForMap(mapID)
   if applied and prevMapID ~= mapID then
@@ -98,7 +141,11 @@ function Events:OnEvent(event, ...)
     return
   end
 
-  if event == "PLAYER_ENTERING_WORLD" or event == "ZONE_CHANGED_NEW_AREA" then
+  if event == "PLAYER_ENTERING_WORLD"
+    or event == "ZONE_CHANGED"
+    or event == "ZONE_CHANGED_INDOORS"
+    or event == "ZONE_CHANGED_NEW_AREA"
+  then
     self:OnMapPossiblyChanged(GetPlayerMapID())
 
     if AutoPrompt and AutoPrompt.MaybePrompt then
@@ -124,6 +171,8 @@ function Events:Init()
 
   f:RegisterEvent("ADDON_LOADED")
   f:RegisterEvent("PLAYER_ENTERING_WORLD")
+  f:RegisterEvent("ZONE_CHANGED")
+  f:RegisterEvent("ZONE_CHANGED_INDOORS")
   f:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 
   Logger:Debug("Events initialized.")
