@@ -56,7 +56,11 @@ function SettingsModule:Init()
     SettingsModule:SetAutoPromptEnabled(value == true)
   end)
 
-  Settings.CreateCheckbox(category, setting)
+  Settings.CreateCheckbox(
+    category,
+    setting,
+    "When enabled, AutoGamma will prompt you to set a gamma override the first time you enter a dungeon, raid, or scenario."
+  )
   Settings.RegisterAddOnCategory(category)
 end
 
